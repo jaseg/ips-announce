@@ -47,7 +47,7 @@ get '/user/:user' do |user|
 end
 
 #session purge logic: clears the session cache from stale sessions
-def purge_sessions do
+def purge_sessions ()
 	ref = now()
 	sessions.delete_if {|session|
 		if session.timeout()+60*SESSION_TIMEOUT < ref then
