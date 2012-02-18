@@ -43,6 +43,13 @@ get '/users' do
 	users_by_room.to_json()
 end
 
+get '/users/pretty' do
+	users_by_room.map {|room, users|
+		{"room" => room,
+		 "users" => users}
+	}.to_json()
+end
+
 get '/users/by-room/:room' do |room|
 	users_by_room[room].to_json()
 end

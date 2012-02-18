@@ -20,7 +20,7 @@
 			<div class="navbar-inner">
 				<div class="container">
 					<div class="nav-collapse">
-						<ul class="nav nav-tabs">
+						<ul class="nav nav-tabs" id="navigation-tabs">
 							<li><a href="#home" data-toggle="tab">Home</a></li>
 							<li><a href="#userlist" data-toggle="tab">User list</a></li>
 							<li><a href="#radar" data-toggle="tab">Radar</a></li>
@@ -47,6 +47,9 @@
 					</div>
 					<div class="tab-pane maintabs" id="radar">
 						<h1>Radar</h1>
+						<ul class="nav nav-tabs" id="floor-selector">
+						</ul>
+						<canvas style="width: 100%; height: 100%;" id="radar-canvas"></canvas>
 					</div>
 					<div class="tab-pane maintabs active" id="testing">
 						<h1>Testing</h1>
@@ -99,7 +102,11 @@
 					}
 				}
 			};
-			
+
+			var radar_data = {
+				layers: new Array()
+			}
+
 			function search(){
 				var term = $("#search-term");
 				$.get("/users/"+term.val(), null, function(data){
@@ -131,7 +138,6 @@
 			};
 
 			var refresh_handler = {
-				home: function(){},
 				userlist: function(){
 					$.get("/users", null, function(data){
 						$("#userlist-container").text("");
@@ -144,11 +150,37 @@
 					}, "json");
 				},
 				radar: function(){
-
+					var floorplan = radar_data.layers[radar_data.current_layer];
+					if(floorplan.complete){
+						console.log("Drawing floor plan");
+						var context = document.getElementById("radar-canvas").getContext("2d");
+						context.drawImage(floorplan, 0, 0);
+					}else{
+						floorplan.onLoad = refresh_handler.radar;
+					}
 				}
 			};
 
-			$('a[data-toggle="tab"]').on('show', function(event){
+			$.getJSON("/floorlist", function(data){
+				radar_data.current_layer = data[0];
+				for(i in data){
+					radar_data.layers[data[i]] = $("<img/>").attr("src", data[i]+".svg")[0];
+					var newtab = $('<a data-toggle="tab"/>');
+					newtab.text(data[i]);
+					newtab.href = "#"+data[i];
+					var newli = $("<li/>");
+					if(i == 0) newli.addClass("active");
+					newli.append(newtab);
+					$("#floor-selector").append(newli);
+				}
+				$('#floor-selector > li > a[data-toggle="tab"]').on('show', function(event){
+					var target = event.target.hash.substring(1);
+					radar_data.current_layer = target;
+					refresh_handler.radar();
+				});
+			});
+
+			$('#navigation-tabs > li > a[data-toggle="tab"]').on('show', function(event){
 				var target = event.target.hash.substring(1);
 				if(refresh_handler[target]) refresh_handler[target]();
 			});
