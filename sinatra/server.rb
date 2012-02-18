@@ -17,7 +17,7 @@ room_by_user = Hash.new()
 sessions = Hash.new()
 
 get '/' do
-  send_file File.join(settings.public, 'index.html')
+  send_file File.join(settings.public_folder, 'index.html')
 end
 
 post '/login' do
