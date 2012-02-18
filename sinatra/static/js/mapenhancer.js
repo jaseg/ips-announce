@@ -1,17 +1,14 @@
 
 enhanceMap = function (doc) {
-
     var roomHash = {};
-
-
     $(doc).find('#rooms').find('g').each(function(i,e){
         var id = $('tspan:contains("###")',e).attr('id');
         var name = n= $('tspan',e).not(':contains("###")').text();
 
         roomHash[ name ] = id;
     });
-
-    console.log(roomHash);
+    console.log("roomHash: "+roomHash);
+	console.log("Doc: "+doc);
 
     function refreshSVGMap() {
         $.each(roomHash, function (name, id) {
@@ -26,8 +23,7 @@ enhanceMap = function (doc) {
             } );
         });
     }
-
-    refreshSVGMap();
+    //refreshSVGMap();
 
     return {
         'refresh' : refreshSVGMap

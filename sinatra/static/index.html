@@ -147,6 +147,8 @@
 					}, "json");
 				},
 				radar: function(){
+					console.log("Current layer", radar_data.current_layer);
+					console.log("contentDocument", radar_data.current_layer.contentDocument);
 					enhanceMap(radar_data.current_layer.contentDocument).refresh(radar_data.current_layer);
 				}
 			};
