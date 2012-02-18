@@ -58,20 +58,20 @@
 			</div>
 		</div>
 <!-- modal dialogs are defined here -->
-		<div class="modal" id="modal-notification-thingy">
+		<div class="modal hide" id="modal-notification-thingy">
 			<div class="modal-body"></div>
 			<div class="modal-footer">
-				<a href="#" class="btn" data-dismiss="modal">Close</a>
+				<a href="#modal-notification-thingy" class="btn" data-dismiss="modal">Close</a>
 			</div>
 		</div>
-		<div class="modal" id="search-results">
+		<div class="modal hide" id="search-results">
 			<div class="modal-header">
-				<a class="close" data-dismiss="modal">×</a>
+				<a href="#search-results" class="close" data-dismiss="modal">×</a>
 				<h3>Search results</h3>
 			</div>
 			<div class="modal-body"></div>
 			<div class="modal-footer">
-				<a href="#" class="btn" data-dismiss="modal">Close</a>
+				<a href="#search-results" class="btn" data-dismiss="modal">Close</a>
 			</div>
 		</div>
 <!-- javascript action begins (mostly) here -->
@@ -98,14 +98,32 @@
 			};
 			
 			function search(){
-				$.get("/users/"+$("#search-term").val(), null, function(data){
+				var term = $("#search-term");
+				$.get("/users/"+term.val(), null, function(data){
 					var results = $("#search-results > .modal-body");
 					if(data.room){
 						results.html(data.user+" is currently in the "+data.room);
 					}else{
-						results.html(data.user+" is not currently known.");
+						$.get("/users/by-room/"+term.val(), null, function(data){
+							if(data.length > 0){
+								results.html("There are currently "+data.length+" people in the "+term.val()+":<br>");
+								for(user in data){
+									if(user != 0){
+										if(user != data.length-1){
+											results.append(", ");
+										}else{
+											results.append(" and ");
+										}
+									}
+									results.append(data[user]);
+								}
+							}else{
+								results.html("I can't find "+term.val());
+							}
+							term.val("");
+						}, "json");
 					}
-					$("search-results").modal('show');
+					$("#search-results").modal('show');
 				}, "json");
 			};
 
@@ -128,7 +146,8 @@
 			};
 
 			$('a[data-toggle="tab"]').on('show', function(event){
-				refresh_handler[event.target.hash.substring(1)]();
+				var target = event.target.hash.substring(1);
+				if(refresh_handler[target]) refresh_handler[target]();
 			});
 			function refresh_views(){
 				$(".maintabs:visible").each(function(index, elem){
