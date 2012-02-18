@@ -44,11 +44,17 @@
 						<h1>User list</h1>
 						<div class="container" id="userlist-container">
 						</div>
-					</div>
+                    </div>
+
+
 					<div class="tab-pane maintabs" id="radar">
-						<h1>Radar</h1>
+                        <h1>Radar</h1>
+
+                        <object data="map.svg" type="image/svg+xml" id="map" width="600px" height="300px"></object>
 					</div>
-					<div class="tab-pane maintabs active" id="testing">
+
+
+                    <div class="tab-pane maintabs active" id="testing">
 						<h1>Testing</h1>
 						<form class="form-inline" action="#">
 							<input type="text" class="span3" id="testing-user" placeholder="User name"><button type="submit" class="btn" onClick="testing.login()">Login!</button>
@@ -78,7 +84,8 @@
 			</div>
 		</div>
 <!-- javascript action begins (mostly) here -->
-		<script src="js/jquery.js"></script>
+        <script src="js/jquery.js"></script>
+        <script src="js/mapenhancer.js"></script>
 		<script src="bootstrap/js/bootstrap-tab.js"></script>
 		<script src="bootstrap/js/bootstrap-modal.js"></script>
 		<script language="javascript">
@@ -98,7 +105,14 @@
 						console.log("Not logged in");
 					}
 				}
-			};
+            };
+
+            var mapMethods = {};
+            $(function(){
+                var svg = $('#map')[0].contentDocument;
+                console.log(svg);
+                mapMethods = enhanceMap(svg);
+            });
 			
 			function search(){
 				var term = $("#search-term");
@@ -143,9 +157,7 @@
 						}
 					}, "json");
 				},
-				radar: function(){
-
-				}
+				radar: mapMethods.refresh
 			};
 
 			$('a[data-toggle="tab"]').on('show', function(event){
