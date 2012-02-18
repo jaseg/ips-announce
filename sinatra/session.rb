@@ -1,11 +1,11 @@
 class Session
 	def initialize (user)
 		@user = user
-		@timeout = now()
+		@timeout = Time.now()
 	end
 	
 	def reset_timeout ()
-		@timeout = now()
+		@timeout = Time.now()
 	end
 
 	def timeout ()

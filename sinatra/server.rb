@@ -21,7 +21,10 @@ get '/' do
 end
 
 post '/login' do
-	sessions[Guid.new()] = Session.new(params[:user])
+	return '{error: "no username given"}' unless params[:user]
+	guid = (Guid.new()).to_s()
+	sessions[guid] = Session.new(params[:user])
+	return {'guid' => guid}.to_json()
 end
 
 post '/announce' do
@@ -29,7 +32,9 @@ post '/announce' do
 	if sessions[session] then
 		room_by_user[session.user] = params[:room]
 		session.reset_timeout()
+		return true;
 	end
+	'{error: "invalid session"}'
 end
 
 get '/users' do
@@ -50,7 +55,7 @@ end
 
 #session purge logic: clears the session cache from stale sessions
 def purge_sessions ()
-	ref = now()
+	ref = Time.now()
 	sessions.delete_if {|session|
 		if session.timeout()+60*SESSION_TIMEOUT < ref then
 			users_by_room[room_by_user[session.user]].delete(session.user)

@@ -12,30 +12,84 @@
 				<div class="container">
 					<div class="nav-collapse">
 						<ul class="nav nav-tabs">
-							<li class="active"><a href="#home">Home</a></li>
-							<li><a href="#userlist">User list</a></li>
-							<li><a href="#radar">Radar</a></li>
+							<li><a href="#home" data-toggle="tab">Home</a></li>
+							<li><a href="#userlist" data-toggle="tab">User list</a></li>
+							<li><a href="#radar" data-toggle="tab">Radar</a></li>
+							<li class="active"><a href="#testing" data-toggle="tab">Testing</a></li>
 						</ul>
 					</div>
 				</div>
 			</div>
 		</div>
 		<div class="container">
-			<div class="tab-content">
-				<div class="tab-pane active" id="home">
-					<h1>Indoor Positioning System Demo Announce Server &copy;&reg;&trade;</h1>
-				</div>
-				<div class="tab-pane" id="userlist">
-					<h1>User list</h1>
-				</div>
-				<div class="tab-pane" id="radar">
-					<h1>Radar</h1>
+			<div class="hero-unit">
+				<div class="tab-content">
+					<div class="tab-pane maintabs" id="home">
+						<h1>Indoor Positioning System Demo Announce Server &copy;&trade;&reg;</h1>
+					</div>
+					<div class="tab-pane maintabs" id="userlist">
+						<h1>User list</h1>
+					</div>
+					<div class="tab-pane maintabs" id="radar">
+						<h1>Radar</h1>
+					</div>
+					<div class="tab-pane maintabs active" id="testing">
+						<h1>Testing</h1>
+						<form class="form-inline">
+							<input type="text" class="span3" id="testing-user" placeholder="User name"><button type="submit" class="btn" onClick="testing.login()">Login!</button>
+						</form>
+						<form class="form-inline">
+							<input type="text" class="span3" id="testing-room" placeholder="Room"><button type="submit" class="btn" onClick="testing.announce()">Announce!</button>
+						</form>
+					</div>
 				</div>
 			</div>
 		</div>
+		<script src="js/jquery.js"></script>
 		<script src="bootstrap/js/bootstrap-tab.js"></script>
 		<script language="javascript">
+
+			var testing = {
+				session: false,
+				login: function(){
+					$.post("/login", {user: $("#testing-user").val()}, function(data){
+						testing.session = data.guid;
+					}, "json");
+				},
+				announce: function(){
+					var room = $("#testing-room").val();
+					if(testing.session){
+						$.post("/announce", {session: testing.session, room: room}, function(data){
+							console.log(data);
+						}, "json");
+					}else{
+						console.log("Not logged in");
+					}
+				}
+			};
 			
+			var refresh_handler = {
+				home: function(){
+
+				},
+				userlist: function(){
+
+				},
+				radar: function(){
+
+				},
+				testing: function(){
+					console.log("refresh testing");
+				}
+			};
+
+			function refresh_views(){
+				$(".maintabs:visible").each(function(index, elem){
+					refresh_handler[elem.id]();
+				});
+				setTimeout(refresh_views, 3000);
+			}
+			refresh_views();
 		</script>
 	</body>
 </html>
