@@ -16,10 +16,6 @@ room_by_user = Hash.new()
 #session id => Session
 sessions = Hash.new()
 
-get '/' do
-	
-end
-
 post '/login' do
 	return '{error: "no username given"}' unless params[:user]
 	guid = (Guid.new()).to_s()
@@ -31,6 +27,8 @@ post '/announce' do
 	session = sessions[params[:session]]
 	if sessions[session] then
 		room_by_user[session.user] = params[:room]
+		users_by_room[:room] = Array.new() unless users_by_room[:room]
+		users_by_room[:room] << session.user
 		session.reset_timeout()
 		return true;
 	end
