@@ -167,12 +167,12 @@
 					newli.append(newtab);
 					$("#floor-selector").append(newli);
 					var svgobject = $('<object>', {
-						data: "/"+data[i]+".svg",
 						type: "image/svg+xml",
 						id: data[i],
 						width: "100%",
 						height: "100%"
 					});
+					svgobject.attr("data", "/"+data[i]+".svg");
 					console.log("Registering layer", data[i], svgobject[0]);
 					$("#radar").append(svgobject);
 					if(i == 0){
