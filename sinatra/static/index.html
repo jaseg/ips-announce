@@ -9,6 +9,9 @@
 			.user-entry {
 				padding-left: 10pt;
 			}
+			.search-result-entry {
+				display: inline;
+			}
 		</style>
 	</head>
 	<body>
@@ -102,11 +105,11 @@
 				$.get("/users/"+term.val(), null, function(data){
 					var results = $("#search-results > .modal-body");
 					if(data.room){
-						results.html(data.user+" is currently in the "+data.room);
+						results.text(data.user+" is currently in the "+data.room);
 					}else{
 						$.get("/users/by-room/"+term.val(), null, function(data){
 							if(data.length > 0){
-								results.html("There are currently "+data.length+" people in the "+term.val()+":<br>");
+								results.text("There are currently "+data.length+" people in the "+term.val()+":<br>");
 								for(user in data){
 									if(user != 0){
 										if(user != data.length-1){
@@ -115,10 +118,10 @@
 											results.append(" and ");
 										}
 									}
-									results.append(data[user]);
+									results.append($("<div class=search-result-entry/>").text(data[user]));
 								}
 							}else{
-								results.html("I can't find "+term.val());
+								results.text("I can't find "+term.val());
 							}
 							term.val("");
 						}, "json");
@@ -131,11 +134,11 @@
 				home: function(){},
 				userlist: function(){
 					$.get("/users", null, function(data){
-						$("#userlist-container").html("");
+						$("#userlist-container").text("");
 						for(room in data){
-							$("#userlist-container").append("<h2>"+room+"</h2>");
+							$("#userlist-container").append($("<h2/>").text(room));
 							for(user in data[room]){
-								$("#userlist-container").append('<div class="user-entry" href="#">'+data[room][user]+'</div>');
+								$("#userlist-container").append($('<div class="user-entry"/>').text(data[room][user]));
 							}
 						}
 					}, "json");
