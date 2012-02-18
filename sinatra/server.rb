@@ -7,6 +7,8 @@ require 'guid'
 require File.dirname(__FILE__)+'/session.rb'
 require File.dirname(__FILE__)+'/config.rb'
 
+set :public_folder, File.dirname(__FILE__) + '/static'
+
 #room name => array of user names
 users_by_room = Hash.new()
 #user name => room name
