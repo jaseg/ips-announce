@@ -153,6 +153,7 @@
 					var floorplan = radar_data.layers[radar_data.current_layer];
 					if(floorplan.complete){
 						console.log("Drawing floor plan");
+						console.log(floorplan);
 						var context = document.getElementById("radar-canvas").getContext("2d");
 						context.drawImage(floorplan, 0, 0);
 					}else{
@@ -164,10 +165,12 @@
 			$.getJSON("/floorlist", function(data){
 				radar_data.current_layer = data[0];
 				for(i in data){
-					radar_data.layers[data[i]] = $("<img/>").attr("src", data[i]+".svg")[0];
+					var img = new Image();
+					img.src = "/"+data[i]+".svg";
+					radar_data.layers[data[i]] = img;
 					var newtab = $('<a data-toggle="tab"/>');
 					newtab.text(data[i]);
-					newtab.href = "#"+data[i];
+					newtab.attr("href", "#"+data[i]);
 					var newli = $("<li/>");
 					if(i == 0) newli.addClass("active");
 					newli.append(newtab);
