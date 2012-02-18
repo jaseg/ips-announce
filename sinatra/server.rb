@@ -16,6 +16,10 @@ room_by_user = Hash.new()
 #session id => Session
 sessions = Hash.new()
 
+get '/' do
+  send_file File.join(settings.public, 'index.html')
+end
+
 post '/login' do
 	return '{error: "no username given"}' unless params[:user]
 	guid = (Guid.new()).to_s()
