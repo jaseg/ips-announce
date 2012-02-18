@@ -49,6 +49,8 @@
 						<h1>Radar</h1>
 						<ul class="nav nav-tabs" id="floor-selector">
 						</ul>
+						<div class="tab-content" id="radar-tabs">
+						</div>
 					</div>
 					<div class="tab-pane maintabs active" id="testing">
 						<h1>Testing</h1>
@@ -147,15 +149,13 @@
 					}, "json");
 				},
 				radar: function(){
-					console.log("Current layer", radar_data.current_layer);
-					console.log("contentDocument", radar_data.current_layer.contentDocument);
 					enhanceMap(radar_data.current_layer.contentDocument).refresh(radar_data.current_layer);
 				}
 			};
 			var radar_data = {current_layer: null};
 			$.getJSON("/floorlist", function(data){
 				var floor_tab_handler = function(event){
-					radar_data.current_layer = event.target;
+					radar_data.current_layer = $(event.target.hash)[0];
 					refresh_handler.radar();
 				};
 				for(i in data){
@@ -172,11 +172,12 @@
 						width: "100%",
 						height: "100%"
 					});
+					svgobject.addClass("tab-pane");
 					svgobject.attr("data", "/"+data[i]+".svg");
-					console.log("Registering layer", data[i], svgobject[0]);
-					$("#radar").append(svgobject);
+					$("#radar-tabs").append(svgobject);
 					if(i == 0){
 						newli.addClass("active");
+						svgobject.addClass("active");
 						radar_data.current_layer = svgobject[0];
 					}
 				}
