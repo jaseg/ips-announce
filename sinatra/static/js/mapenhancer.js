@@ -7,8 +7,8 @@ enhanceMap = function (doc) {
 
         roomHash[ name ] = id;
     });
-    console.log("roomHash: "+roomHash);
-	console.log("Doc: "+doc);
+    console.log("roomHash: ", roomHash);
+	console.log("Doc: ", doc);
 
     function refreshSVGMap() {
         $.each(roomHash, function (name, id) {
