@@ -55,7 +55,7 @@ get '/users/by-room/:room' do |room|
 end
 
 get '/rooms' do
-	users_by_room.keys()
+	users_by_room.keys().to_json()
 end
 
 get '/users/:user' do |user|
