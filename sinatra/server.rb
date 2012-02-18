@@ -20,19 +20,19 @@ post '/login' do
 	return '{error: "no username given"}' unless params[:user]
 	guid = (Guid.new()).to_s()
 	sessions[guid] = Session.new(params[:user])
-	return {'guid' => guid}.to_json()
+	return {'session' => guid}.to_json()
 end
 
 post '/announce' do
 	session = sessions[params[:session]]
-	if sessions[session] then
-		room_by_user[session.user] = params[:room]
-		users_by_room[:room] = Array.new() unless users_by_room[:room]
-		users_by_room[:room] << session.user
-		session.reset_timeout()
-		return true;
-	end
-	'{error: "invalid session"}'
+	return '{"error": "invalid session"}' unless session
+	users_by_room[room_by_user[session.user]].delete(session.user) if room_by_user[session.user]
+	room = params[:room]
+	room_by_user[session.user] = room
+	users_by_room[room] = Array.new() unless users_by_room[room]
+	users_by_room[room] << session.user
+	session.reset_timeout()
+	return true;
 end
 
 get '/users' do
@@ -47,7 +47,7 @@ get '/rooms' do
 	users_by_room.keys()
 end
 
-get '/user/:user' do |user|
+get '/users/:user' do |user|
 	{'user' => user, 'room' => room_by_user[user]}.to_json()
 end
 
