@@ -156,14 +156,16 @@
 					$.get("/users", null, function(data){
 						var completion_list = new Array();
 						$("#userlist-container").text("");
-						for(room in data){
+                        for(room in data){
+                            if( data[room] && data[room].length>0) {
 							$("#userlist-container").append($("<h2/>").text(room));
 							completion_list.indexOf(room) >= 0 || completion_list.push(room);
 							for(user in data[room]){
 								var user = data[room][user];
 								completion_list.indexOf(user) >= 0 || completion_list.push(user);
 								$("#userlist-container").append($('<div class="user-entry"/>').text(user));
-							}
+                            }
+                            }
 						}
 						$("#search-term").typeahead({
 							source: completion_list

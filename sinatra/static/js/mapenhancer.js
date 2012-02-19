@@ -11,7 +11,7 @@ enhanceMap = function (doc) {
     function refreshSVGMap() {
         $.each(roomHash, function (name, id) {
             $.getJSON('/users/by-room/'+ encodeURIComponent(name) , function(data){
-                if( data ) {
+                if( data && data.length!==0 ) {
                     $(doc).find('#'+id).text( data.length + ' hacker'+(data.length==1?'':'s'));
                 } else {
                     $(doc).find('#'+id).text("NIL");
