@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 
+require 'date'
 require 'rubygems'
 require 'sinatra'
 require 'json'
