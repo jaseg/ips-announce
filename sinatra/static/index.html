@@ -60,6 +60,9 @@
 						<form class="form-inline" action="#">
 							<input type="text" class="span3" id="testing-room" placeholder="Room"><button type="submit" class="btn" onClick="testing.announce()">Announce!</button>
 						</form>
+						<form class="form-inline" action="#">
+							<input type="text" class="span3" id="testing-eta" placeholder="ETA"><button type="submit" class="btn" onClick="testing.eta()">Announce!</button>
+						</form>
 					</div>
 				</div>
 			</div>
@@ -98,6 +101,15 @@
 					var room = $("#testing-room").val();
 					if(testing.session){
 						$.post("/announce", {session: testing.session, room: room}, function(data){
+						}, "json");
+					}else{
+						console.log("Not logged in");
+					}
+				},
+				eta: function(){
+					var eta = $("#testing-eta").val();
+					if(testing.session){
+						$.post("/eta", {session: testing.session, eta: eta}, function(data){
 						}, "json");
 					}else{
 						console.log("Not logged in");
@@ -151,7 +163,6 @@
 					}, "json");
 				},
 				radar: function(){
-					console.log("map", enhanced_maps[radar_data.current_layer]);
 					enhanced_maps[radar_data.current_layer].refresh();
 				}
 			};
@@ -172,8 +183,7 @@
 					var svgobject = $('<object>', {
 						type: "image/svg+xml",
 						id: data[i],
-						width: "100%",
-						height: "100%"
+						width: "100%"
 					});
 					svgobject.addClass("tab-pane");
 					svgobject.attr("data", "/"+data[i]+".svg");
