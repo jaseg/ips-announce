@@ -151,7 +151,7 @@
 				}, "json");
 			};
 
-      var enhanced_maps = {};
+			var enhanced_maps = {};
 			var completion_list = new Array();
 			$.getJSON("/rooms", function(data){
 				for(i in data){
@@ -183,13 +183,16 @@
                         etaContainer.text('');
                         etaContainer.append($('<h2>').text('ETAs'));
 
-                        var etaList = $('<li>');
+						var etaList = $('<li>');
+						var now = new Date();
                         for ( eta in data ){
                             etaList.append($('<dt>').text(eta));
-
-                            var t = new Date(data[eta]);
-
-                            etaList.append($('<dd>').text(t))
+							var t = new Date(data[eta]);
+							console.log(now-t);
+							var minutes = Math.floor((t-now)/1000/60);
+							var hours = Math.floor(minutes/60);
+							minutes %= 60;
+							etaList.append($('<dd>').text((hours > 0?hours+" Hours ":"")+minutes+" Minutes"));
                         }
                         etaContainer.append(etaList);
                     });
