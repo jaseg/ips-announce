@@ -1,3 +1,11 @@
-The main documentation for this work in progress can be found be found at http://piratenpad.de/p/ips.
-The android app is being developed at https://bitbucket.org/keyboardsurfer/trackmeifyoucanandroid
-The positioning server's source can be found at https://bitbucket.org/keyboardsurfer/trackmeifyoucanserver
+Specs
+-----
+http://piratenpad.de/p/ips.
+
+Android App
+-----------
+https://bitbucket.org/keyboardsurfer/trackmeifyoucanandroid
+
+Positioning Server
+------------------
+https://bitbucket.org/keyboardsurfer/trackmeifyoucanserver
