@@ -41,9 +41,11 @@
 						<h1>Indoor Positioning System Demo Announce Server &copy;&trade;&reg;</h1>
 					</div>
 					<div class="tab-pane maintabs" id="userlist">
-						<h1>User list</h1>
-						<div class="container" id="userlist-container">
-						</div>
+                        <h1>User list</h1>
+                        <div class="row container">
+                            <div class="span7" id="userlist-container"></div>
+                            <div class="span4" id="etalist-container"></div>
+                        </div>
 					</div>
 					<div class="tab-pane maintabs" id="radar">
 						<h1>Radar</h1>
@@ -170,11 +172,27 @@
 						$("#search-term").typeahead({
 							source: completion_list
 						});
-					}, "json");
+                    }, "json");
+
+                    $.getJSON('/etas', function(data) {
+                        var etaContainer = $('#etalist-container');
+                        etaContainer.text('');
+                        etaContainer.append($('<h2>').text('ETAs'));
+
+                        var etaList = $('<li>');
+                        for ( eta in data ){
+                            etaList.append($('<dt>').text(eta));
+
+                            var t = new Date(data[eta]);
+
+                            etaList.append($('<dd>').text(t))
+                        }
+                        etaContainer.append(etaList);
+                    });
 				},
 				radar: function(){
 					enhanced_maps[radar_data.current_layer].refresh();
-				}
+                },
 			};
 			var radar_data = {current_layer: null};
 			$.getJSON("/floorlist", function(data){
@@ -221,9 +239,8 @@
 				$(".maintabs:visible, #userlist").each(function(index, elem){
 					if(refresh_handler[elem.id]) refresh_handler[elem.id]();
 				});
-				setTimeout(refresh_views, 3000);
-			}
-			refresh_views();
+            }
+            var refreshInterval = setInterval( refresh_views, 3000 );
 		</script>
 	</body>
 </html>
