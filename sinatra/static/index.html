@@ -136,7 +136,7 @@
 				}, "json");
 			};
 
-            var enhancedMaps = {};
+      var enhanced_maps = {};
 
 			var refresh_handler = {
 				userlist: function(){
@@ -150,17 +150,15 @@
 						}
 					}, "json");
 				},
-                radar: function(){
-                    console.log(radar_data);
-					console.log("Current layer", radar_data.current_layer);
-					console.log("contentDocument", radar_data.current_layer.contentDocument);
-					enhanceMap(radar_data.current_layer.contentDocument).refresh(radar_data.current_layer);
+				radar: function(){
+					console.log("map", enhanced_maps[radar_data.current_layer]);
+					enhanced_maps[radar_data.current_layer].refresh();
 				}
 			};
 			var radar_data = {current_layer: null};
 			$.getJSON("/floorlist", function(data){
 				var floor_tab_handler = function(event){
-					radar_data.current_layer = $(event.target.hash)[0];
+					radar_data.current_layer = event.target.hash.substring(1);
 					refresh_handler.radar();
 				};
 				for(i in data){
@@ -180,10 +178,17 @@
 					svgobject.addClass("tab-pane");
 					svgobject.attr("data", "/"+data[i]+".svg");
 					$("#radar-tabs").append(svgobject);
+					var load_handler = function(hash, so){
+						return function(){
+							console.log("registering map", hash, so);
+							enhanced_maps[hash] = enhanceMap(so.contentDocument);
+						};
+					};
+					svgobject[0].onload = load_handler(data[i], svgobject[0]);
 					if(i == 0){
 						newli.addClass("active");
 						svgobject.addClass("active");
-						radar_data.current_layer = svgobject[0];
+						radar_data.current_layer = data[i];
 					}
 				}
 			});
