@@ -77,10 +77,6 @@ get '/users/by-room/:room' do |room|
 	users_by_room[room].to_json()
 end
 
-get '/rooms' do
-	users_by_room.keys().to_json()
-end
-
 get '/users/:user' do |user|
 	{'user' => user, 'room' => room_by_user[user], 'eta' => pending_etas[user]}.to_json()
 end
