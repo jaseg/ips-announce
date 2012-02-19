@@ -127,7 +127,8 @@
 					}else{
 						$.get("/users/by-room/"+term.val(), null, function(data){
 							if(data.length > 0){
-								results.text("There are currently "+data.length+" people in the "+term.val()+":<br>");
+								results.text("There are currently "+data.length+" people in the "+term.val()+":");
+								results.append("<br>");
 								for(user in data){
 									if(user != 0){
 										if(user != data.length-1){
@@ -164,7 +165,6 @@
 								$("#userlist-container").append($('<div class="user-entry"/>').text(user));
 							}
 						}
-						console.log("Completion list", completion_list);
 						$("#search-term").typeahead({
 							source: completion_list
 						});
@@ -198,7 +198,6 @@
 					$("#radar-tabs").append(svgobject);
 					var load_handler = function(hash, so){
 						return function(){
-							console.log("registering map", hash, so);
 							enhanced_maps[hash] = enhanceMap(so.contentDocument);
 						};
 					};
