@@ -182,7 +182,7 @@
                         var etaContainer = $('#etalist-container');
                         etaContainer.text('');
                         console.log(data, !!data, data!={});
-                        if( !!data && data != {} ) {
+						if( !!data && data.length > 0 ) {
                             etaContainer.append($('<h2>').text('ETAs'));
 
 						    var etaList = $('<li>');
