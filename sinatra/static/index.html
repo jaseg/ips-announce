@@ -85,10 +85,11 @@
 			</div>
 		</div>
 <!-- javascript action begins (mostly) here -->
-        <script src="js/jquery.js"></script>
-        <script src="js/mapenhancer.js"></script>
+		<script src="js/jquery.js"></script>
+		<script src="js/mapenhancer.js"></script>
 		<script src="bootstrap/js/bootstrap-tab.js"></script>
 		<script src="bootstrap/js/bootstrap-modal.js"></script>
+		<script src="bootstrap/js/bootstrap-typeahead.js"></script>
 		<script language="javascript">
 			var testing = {
 				session: false,
@@ -117,7 +118,6 @@
 				}
 			};
 
-		
 			function search(){
 				var term = $("#search-term");
 				$.get("/users/"+term.val(), null, function(data){
@@ -153,13 +153,21 @@
 			var refresh_handler = {
 				userlist: function(){
 					$.get("/users", null, function(data){
+						var completion_list = new Array();
 						$("#userlist-container").text("");
 						for(room in data){
 							$("#userlist-container").append($("<h2/>").text(room));
+							completion_list.indexOf(room) >= 0 || completion_list.push(room);
 							for(user in data[room]){
-								$("#userlist-container").append($('<div class="user-entry"/>').text(data[room][user]));
+								var user = data[room][user];
+								completion_list.indexOf(user) >= 0 || completion_list.push(user);
+								$("#userlist-container").append($('<div class="user-entry"/>').text(user));
 							}
 						}
+						console.log("Completion list", completion_list);
+						$("#search-term").typeahead({
+							source: completion_list
+						});
 					}, "json");
 				},
 				radar: function(){
@@ -208,7 +216,8 @@
 				if(refresh_handler[target]) refresh_handler[target]();
 			});
 			function refresh_views(){
-				$(".maintabs:visible").each(function(index, elem){
+				//userlist is refreshed every time to provide the search file with a list of rooms and users for autocompletion
+				$(".maintabs:visible, #userlist").each(function(index, elem){
 					if(refresh_handler[elem.id]) refresh_handler[elem.id]();
 				});
 				setTimeout(refresh_views, 3000);
