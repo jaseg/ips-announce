@@ -198,7 +198,7 @@
                     });
 				},
 				radar: function(){
-					enhanced_maps[radar_data.current_layer].refresh();
+					if(enhanced_maps[radar_data.current_layer]) enhanced_maps[radar_data.current_layer].refresh();
                 },
 			};
 			var radar_data = {current_layer: null};
@@ -218,14 +218,18 @@
 					var svgobject = $('<object>', {
 						type: "image/svg+xml",
 						id: data[i],
-						width: "100%"
+						width: "100%",
+						height: "100%"
 					});
 					svgobject.addClass("tab-pane");
 					svgobject.attr("data", "/"+data[i]+".svg");
+					console.log("Registering", i, svgobject.attr("data"), svgobject[0]);
 					$("#radar-tabs").append(svgobject);
 					var load_handler = function(hash, so){
 						return function(){
+							console.log("load hander for", hash);
 							enhanced_maps[hash] = enhanceMap(so.contentDocument);
+							enhanced_maps[hash].refresh();
 						};
 					};
 					svgobject[0].onload = load_handler(data[i], svgobject[0]);
